@@ -24,6 +24,7 @@ $(document).ready(function () {
     $('#equals').on('click', function() {
         mathInput.numberOne = numberInputQueue[numberInputQueue.length - 2];
         mathInput.numberTwo = numberInputQueue[numberInputQueue.length - 1];
+        inputDisplay = '';
         console.log('mathInput: ');
         console.log(mathInput);
         postCalc();
@@ -53,7 +54,10 @@ $(document).ready(function () {
             url: '/getCalc',
             success: function (response) { // response will be the array of geese
                 console.log(response);
-                $('#answer').empty().text(response);
+                $('#answer').text("Computing...")
+                setTimeout(function() {
+                    $('#answer').text(response);
+                }, 3000);
             }
         });
     }
