@@ -20,7 +20,8 @@ app.get('/getCalc', function(req, res){
 app.post('/postCalc', function(req, res) {
     //console.log(req.body);
     if (req.body.numberOne.length == 0 ||
-        req.body.numberTwo.length == 0) {
+        req.body.numberTwo.length == 0 ||
+        req.body.mathVerb.length == 0) {
         sendStatus(400);
     } else {
         var numberOne = parseInt(req.body.numberOne);
@@ -31,10 +32,16 @@ app.post('/postCalc', function(req, res) {
                 break;
             case 'subtract':
                 answer = numberOne - numberTwo;
+                break;
             case 'multiply':
                 answer = numberOne * numberTwo;
+                break;
             case 'divide':
                 answer = numberOne / numberTwo;
+                break;
+            default:
+                sendStatus(400);
+                break;
         }
         answer = answer.toString(10);
         res.sendStatus(201);

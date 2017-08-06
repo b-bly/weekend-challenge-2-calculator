@@ -1,0 +1,38 @@
+body {
+    background: #ABA8B2;
+    position: relative;
+    font-family: Arial;
+}
+
+.container {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 145px;
+    margin: 0 auto;
+}
+
+#answer {
+    padding: 5px;
+    background: white;
+    border-radius: 5px;
+    width: 125px;
+    font-size: 1em;
+    justify-content: flex-end;
+}
+
+button {
+    width: 30px;
+    height: 30px;
+    background: #4C4B63;
+    margin: 2px;
+    color: #5386E4;
+    border-radius: 4px;
+    border: none;
+    font-size: 1em;
+}
+
+button:hover {
+    opacity: 0.8;
+}
