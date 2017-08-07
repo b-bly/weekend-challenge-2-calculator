@@ -10,44 +10,85 @@ var answer = 0;
 
 app.use(express.static('public'));
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/getCalc', function(req, res){
-    //console.log(answer);
-    res.send(answer);
-});
 
-app.post('/postCalc', function(req, res) {
+
+app.post('/postCalc', function (req, res) {
     //console.log(req.body);
-    if (req.body.numberOne.length == 0 ||
-        req.body.numberTwo.length == 0 ||
-        req.body.mathVerb.length == 0) {
-        sendStatus(400);
-    } else {
-        var numberOne = parseInt(req.body.numberOne);
-        var numberTwo = parseInt(req.body.numberTwo);
-        switch(req.body.mathVerb) {
-            case 'add':
-                answer = numberOne + numberTwo;
-                break;
-            case 'subtract':
-                answer = numberOne - numberTwo;
-                break;
-            case 'multiply':
-                answer = numberOne * numberTwo;
-                break;
-            case 'divide':
-                answer = numberOne / numberTwo;
-                break;
-            default:
-                sendStatus(400);
-                break;
+    // if (req.body.numberOne.length == 0 ||
+    //     req.body.numberTwo.length == 0 ||
+    //     req.body.mathVerb.length == 0) {
+    //     sendStatus(400);
+    // } else {
+        var input = req.body.input;
+        //make sure it starts and ends with numbers--if not, delete extras
+        var numbers = input.split(/\+|\/|\-|\*/).map(function (number) {
+            return parseInt(number);
+        });
+
+        var operators = input.split(/\d+/).filter(function (number) {
+            return number == '' ? false : true;
+        });
+
+        //if more than one operator in a row, use the last one entered
+        var counter = 0;
+        operators = operators.filter(function (operator, i) {
+            if (operator == "*") {
+                numbers[i - counter] = numbers[i - counter] * numbers[i + 1 - counter];
+                numbers.splice(i + 1 - counter, 1);
+                counter++;
+                return false;
+            } else if (operator == "/") {
+                numbers[i - counter] = numbers[i - counter] / numbers[i + 1 - counter];
+                numbers.splice(i + 1 - counter, 1);
+                counter++;
+                return false;
+            } else {
+                return true;
+            }
+        });
+
+        answer = numbers.shift();
+        for (var i = 0; i < numbers.length; i++) {
+            if (operators[i] == "+") {
+                answer += numbers[i];
+            } else {
+                answer -= numbers[i];
+            }
         }
+        
+        // var numberOne = parseInt(req.body.numberOne);
+        // var numberTwo = parseInt(req.body.numberTwo);
+        // switch(req.body.mathVerb) {
+        //     case 'add':
+        //         answer = numberOne + numberTwo;
+        //         break;
+        //     case 'subtract':
+        //         answer = numberOne - numberTwo;
+        //         break;
+        //     case 'multiply':
+        //         answer = numberOne * numberTwo;
+        //         break;
+        //     case 'divide':
+        //         answer = numberOne / numberTwo;
+        //         break;
+        //     default:
+        //         sendStatus(400);
+        //         break;
+        // }
         answer = answer.toString(10);
+        console.log(answer);
         res.sendStatus(201);
-    }
+    //}
 });
 
-app.listen(port, function(){
+app.get('/getCalc', function (req, res) {
+    console.log('get ' + typeof answer);
+    res.send(answer);
+    
+});
+
+app.listen(port, function () {
     console.log('Running on port: ', port);
 });

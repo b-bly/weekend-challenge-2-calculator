@@ -2,43 +2,64 @@ console.log('client.js has been loaded');
 
 $(document).ready(function () {
     console.log('jquery is loaded');
-    var mathInput = {};
-    var numberInputQueue = [];
+    //var mathInput = {};
+    //var numberInputQueue = [];
     var inputDisplay = '';
+    var inputObj = {};
+    var operator = '';
     $('#1, #2, #3, #4, #5, #6, #7, #8, #9, #0').on('click', function() {
         //console.log(this.id + ' button clicked.');
         displayInput(this.id);
-        numberInputQueue.push(this.id);
+        //numberInputQueue.push(this.id);
     });
     $('#add, #subtract, #divide, #multiply').on('click', function () {
         //console.log(this + ' button clicked');
-        mathInput.mathVerb = this.id;
-        displayInput(this.id);
+        //mathInput.mathVerb = this.id;
+        switch(this.id) {
+            case 'add':
+                operator = '+';
+                break;
+            case 'subtract':
+                operator = '-';
+                break;
+            case 'multiply':
+                operator = '*';
+                break;
+            case 'divide':
+                operator = '/';
+                break;
+            default:
+                break;
+        }
+        displayInput(operator);
     });
     $('#clear').on('click', function() {
         $('#answer').empty().text('0');
-        mathInput.mathVerb = '';
-        numberInputQueue = [];
+        // mathInput.mathVerb = '';
+        // numberInputQueue = [];
         inputDisplay = '';
     });
     $('#equals').on('click', function() {
-        mathInput.numberOne = numberInputQueue[numberInputQueue.length - 2];
-        mathInput.numberTwo = numberInputQueue[numberInputQueue.length - 1];
-        inputDisplay = '';
-        console.log('mathInput: ');
-        console.log(mathInput);
+        // mathInput.numberOne = numberInputQueue[numberInputQueue.length - 2];
+        // mathInput.numberTwo = numberInputQueue[numberInputQueue.length - 1];
+        inputObj = {
+            input: inputDisplay
+        }
+        // console.log('mathInput: ');
+        // console.log(mathInput);
         postCalc();
+        inputDisplay = '';
     });
 
     function postCalc() {
          $.ajax({
             method: 'POST',
             url: '/postCalc',
-            data: mathInput,
+            data: inputObj,
             success: function (response) {
-                console.log(response);
-                mathInput.mathVerb = '';
-                numberInputQueue = [];
+                // console.log(response);
+                // mathInput.mathVerb = '';
+                // numberInputQueue = [];
                 getCalc();
             },
             error: function (xhr, _, errorThrown) {
@@ -52,8 +73,8 @@ $(document).ready(function () {
         $.ajax({
             method: 'GET',
             url: '/getCalc',
-            success: function (response) { // response will be the array of geese
-                console.log(response);
+            success: function (response) {
+                console.log('get response: ' + response);
                 $('#answer').text("Computing...")
                 setTimeout(function() {
                     $('#answer').text(response);
