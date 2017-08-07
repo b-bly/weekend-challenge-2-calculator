@@ -2,20 +2,17 @@ console.log('client.js has been loaded');
 
 $(document).ready(function () {
     console.log('jquery is loaded');
-    //var mathInput = {};
-    //var numberInputQueue = [];
+  
     var inputDisplay = '';
     var inputObj = {};
     var operator = '';
-    $('#1, #2, #3, #4, #5, #6, #7, #8, #9, #0').on('click', function() {
+    $('#1, #2, #3, #4, #5, #6, #7, #8, #9, #0').on('click', function () {
         //console.log(this.id + ' button clicked.');
         displayInput(this.id);
-        //numberInputQueue.push(this.id);
     });
     $('#add, #subtract, #divide, #multiply').on('click', function () {
         //console.log(this + ' button clicked');
-        //mathInput.mathVerb = this.id;
-        switch(this.id) {
+        switch (this.id) {
             case 'add':
                 operator = '+';
                 break;
@@ -33,33 +30,25 @@ $(document).ready(function () {
         }
         displayInput(operator);
     });
-    $('#clear').on('click', function() {
+    $('#clear').on('click', function () {
         $('#answer').empty().text('0');
-        // mathInput.mathVerb = '';
-        // numberInputQueue = [];
         inputDisplay = '';
     });
-    $('#equals').on('click', function() {
-        // mathInput.numberOne = numberInputQueue[numberInputQueue.length - 2];
-        // mathInput.numberTwo = numberInputQueue[numberInputQueue.length - 1];
+    $('#equals').on('click', function () {
         inputObj = {
             input: inputDisplay
         }
-        // console.log('mathInput: ');
-        // console.log(mathInput);
         postCalc();
         inputDisplay = '';
     });
 
     function postCalc() {
-         $.ajax({
+        $.ajax({
             method: 'POST',
             url: '/postCalc',
             data: inputObj,
             success: function (response) {
                 // console.log(response);
-                // mathInput.mathVerb = '';
-                // numberInputQueue = [];
                 getCalc();
             },
             error: function (xhr, _, errorThrown) {
@@ -76,7 +65,7 @@ $(document).ready(function () {
             success: function (response) {
                 console.log('get response: ' + response);
                 $('#answer').text("Computing...")
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#answer').text(response);
                 }, 3000);
             }
